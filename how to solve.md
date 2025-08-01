@@ -3,8 +3,8 @@ run it using 'gdb ./array_crackme'.
 
                                       GDB
 in GDB:
-make a breakpoint 'b main'
-run it 'r'
+make a breakpoint 'b main'.
+run it 'r'.
 
 lets disassble it 'disas main'.
 you probely will see something like this:
@@ -141,6 +141,12 @@ you probely will see something like this:
           if u want to crack a for loop u have to use the same way but we need to get the comperesent address but add a breakpoint.
           'b *0x400499' set a breakpoint.
           'x/5b 0x400499' take the 4th value.
-          'set {int}0x40049c 0x99' check the value and you are good to go.
-    3rd. how to crack an array.
-  
+          'set {char}0x40049c 0x01' and check the value. // we use char because 0x01 is only 1 byte its not 99 or smth like that.
+          after that type 'c' to contioue.
+    3rd. how to crack an array
+          if you want to crck array you can add a number to it clasic output: 100 = 0+10+20+30+40, cracked: 199 = 99+10+20+30+40.
+          'set {int}($rbp-0x20) = 99' set the first to 99 
+          'x/5xw $rbp-0x20' the first one: 0x63 is 99 in hexadecimal.
+          and press 'c' to continue.
+    4th. how to bypass a for loop.
+          use 'set $rip = address'
