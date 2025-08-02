@@ -53,7 +53,7 @@ you probely will see something like this:
     
   Now lets cover 1st for loop:
     0x000000000040047c <+22>:	jmp    0x400499 <main+51> // we will go to <main+51>.
-    0x0000000000400499 <+51>:	cmpl   $0x4,-0x4(%rbp)  // compare 4 to -0x4 our 'i'. Why 4 we use 4 because its an integer and we can write it like i <= 4 because an integer is only a full number with out a decimal.
+    0x0000000000400499 <+51>:	cmpl   $0x4,-0x4(%rbp)  // compare 4 to -0x4 our 'i'. Why 4, we use 4 because its an integer and we can write it like i <= 4 because cycle have to work while i < 5.
   use 'ni' to go down.
   You will see 0x000000000040049d <+55>:	jle    0x40047e <main+24> // jle stand for jump if less or equale. So you jump to <main+24>.
   now we are in for loop. 
@@ -72,9 +72,8 @@ you probely will see something like this:
    0x000000000040048a <+36>:	mov    %eax,%edx
    0x000000000040048c <+38>:	mov    -0x4(%rbp),%eax
    0x000000000040048f <+41>:	cltq
-   0x0000000000400491 <+43>:	mov    %edx,0x20(%rbp,%rax,4)
-   0x0000000000400495 <+47>:	add    %al,(%rax)
-   0x0000000000400497 <+49>:	add    %al,(%rcx)
+   0x0000000000400491 <+43>:	mov    %edx,-0x20(%rbp,%rax,4)
+   0x0000000000400495 <+47>:	addl   $0x1,-0x4(%rbp)
 
   1st copy 'i' to %edx.
   2nd copy %edx to %eax.
@@ -86,7 +85,7 @@ you probely will see something like this:
     3. %eax = 12(3 * (2^2) = 12) // shl $0x2, %eax
     4. %eax = 12 + 3 = 15        // add %edx, %eax
     5. add = 15 + 15 = 30        // add %eax, %eax
-    6. eax = 3                   // mov -0x4(%rbp),%eax
+    6. eax = 3                   // mov -0x4(%rbp),%eax // return back 'i' to original state
   now u see how its done not hard.
 
   type 'ni'.
@@ -134,15 +133,17 @@ you probely will see something like this:
     1st. variables 
           if you want to crack variables you can check there value by 'x/5b 0x40046e' you will see something like that: 0x40046e <main+8>:	0xc7	0x45	0xf8	0x00	0x00.
           we need the 4th value.
-          write 'set {int}0x400471 = 0x02' we write differnt memory address because add + more bytes (0xc7	0x45	0xf8).
+          write 'set {char}0x400471 = 0x02' we write differnt memory address because add + more bytes (0xc7	0x45	0xf8).
           and check value again 'x/5b 0x40046e'.
           same with second variable.
+          if its a long integer like 99 better to use {int}
     2nd. for loop
           if u want to crack a for loop u have to use the same way but we need to get the comperesent address but add a breakpoint.
           'b *0x400499' set a breakpoint.
           'x/5b 0x400499' take the 4th value.
           'set {char}0x40049c 0x01' and check the value. // we use char because 0x01 is only 1 byte its not 99 or smth like that.
           after that type 'c' to contioue.
+          we use char because its more safe and we need only 1 byte insted of 4 which integer will give us. That can lead to an error.
     3rd. how to crack an array
           if you want to crck array you can add a number to it clasic output: 100 = 0+10+20+30+40, cracked: 199 = 99+10+20+30+40.
           'set {int}($rbp-0x20) = 99' set the first to 99 
